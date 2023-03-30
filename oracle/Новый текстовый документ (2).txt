@@ -1,0 +1,49 @@
+create table auto_sal
+( id_s NUMBER(5) Primary KEY,
+city varchar2(50),
+street varchar2(50));
+
+
+alter TABLE auto_sal add CONSTRAINT chk_id_s CHECK (id_s >=10000 and id_s<= 99999);
+
+alter table auto_sal MODIFY (city not null, street not null);
+
+alter table auto_sal MODIFY (
+CREATE TABLE automob
+( id_a Number(10),
+id_s Number(5) REFERENCES auto_sal(id_s),
+mark_a VARCHAR2(25),
+country_a varchar2(25),
+colour varchar2(25));
+
+alter TABLE automob add CONSTRAINT aut_pk PRIMARY KEY (id_a, id_s) ENABLE;
+
+alter TABLE auto_sal MODIFY (street varchar2(50));
+
+INSERT INTO auto_sal VALUES (10000,'Краснодар','ул. Ставропольская');
+INSERT INTO auto_sal VALUES (10001,'Краснодар','ул. Северная');
+INSERT INTO auto_sal VALUES (10002,'Краснодар','ул. Школьная');
+INSERT INTO auto_sal VALUES (10003,'Краснодар','ул. Красная');
+INSERT INTO auto_sal VALUES (10004,'Краснодар','ул. Уральская');
+
+create table arendator(
+id_aren number(5) primary key,
+las_name varchar2(50) not null,
+fir_name varchar2(50) not null,
+phone_num varchar2(15) not null,
+data_b date not null,
+adress varchar2(50) not null
+)
+
+alter table arendator add check(SUBSTR(phone_num,1,1)='+' and LENGTH(phone_num)>=12 and LENGTH(phone_num)<=15);
+
+alter table arendator add column data_b date not null;
+
+create table prokat(
+id_pr number(5) primary key,
+date_t date not null,
+date_back date,
+payb number(10)
+)
+
+alter TABLE prokat add PRIMARY KEY (id_a, id_s, id_aren) ENABLE;
