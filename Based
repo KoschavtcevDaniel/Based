@@ -1,0 +1,114 @@
+select * from employees e, jobs j, departments d where e.job_id = j.job_id and d.department_id = e.department_id;
+
+select * from employees e join jobs j on e.job_id = j.job_id join departments d on d.department_id = e.department_id;
+
+select * from employees e full join departments d on d.department_id = e.department_id;
+
+select * from employees e, jobs j, departments d where d.department_id = e.department_id (+); //right join
+
+select * from employees e, jobs j, departments d where d.department_id(+) = e.department_id ; //left join
+
+
+***********************************************************************************************************************************************
+/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\//\/\/\/\/\/\/\/\/\/\//\/\//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+***********************************************************************************************************************************************
+
+
+select e.last_name, d.department_name, l.*, e.commission_pct 
+from locations l, departments d, employees e
+where e.commission_pct > 0 and 
+e.department_id = d.department_id (+) and
+d.location_id = l.location_id (+);
+
+
+select distinct j.job_title, l.street_address, e.department_id
+from locations l, departments d, employees e, jobs j
+where e.department_id = 80 and
+j.job_id = e.job_id (+) and
+d.location_id = l.location_id (+) and
+e.department_id = d.department_id (+);
+
+last name like '%a%' - смотрит по букве
+
+select e.last_name, d.department_name
+from departments d, employees e
+where last name like '%а%' and
+e.department_id = d.department_id (+);
+
+select * 
+from employees e
+where e.department_id = (select d.department_id
+from departments d
+join employees el on 
+el.employee_id = d.manager_id
+join locations l on l.location_id = d.location_id
+where el.last_name = 'King')
+
+any, some, all     after     [<> < > = <=]
+any, some - равенство некоторму из подзапров
+all - одновременное равентсво
+везде кроме group by, order by
+in -равенство одному из элементов в списке
+
+select e1.*, (select avg(e2.salary)
+from employees e2
+where e2.department_id = e1.department_id 
+or (e1.department_id is null and e2.department_id is null))
+from employees e1
+
+
+select e1.*, ea1.sal
+from employees e1
+join (select e2.department_id as d_id, avg(salary) as sal
+from employees e2 group by e2.department_id) ea1 on e1.department_id = ea1.d_id
+
+
+select e1.employee_id, e1.first_name, e1.last_name, e1.department_id
+from employees e1
+where e1.department_id in (select e2.department_id
+from employees e2 
+group by e2.department_id
+having avg(e2.salary) >= all(select avg(e3.salary)
+from employees e3 group by e3.department_id))
+
+select e1.department_name, e1.first_name, e1.last_name
+from employees e1, locations l
+where e1.department_id = (select d.department_id
+from departments d
+join employees el on 
+el.employee_id = d.manager_id
+where el.last_name = 'King') and l.city = (select l2.city
+from locations l2, where 
+
+
+
+
+select distinct d.department_name, e.last_name, e.first_name
+from departments d, locations l, countries c, employees e, jobs j
+where c.country_name = 'United States of America'
+and c.country_id = l.country_id 
+and l.location_id = d.location_id
+and e.employee_id = d.manager_id 
+and d.department_id in (select e1.department_id 
+from employees e1, jobs j
+where e1.job_id = j.job_id 
+and job_title = 'Programmer');
+
+
+select l.city, count(d_department_id), sum(e.salary), count(e.employee_id)
+from locations l, employees e, departments d
+group by deopartment_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
