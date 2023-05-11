@@ -1,37 +1,40 @@
 create table bonuses
 (
     id_b number(10) primary key,
-    sal_bon number(5,2),
+    sal_bon number(10,2),
     employee_id number(10),
     date_form date default sysdate,
     date_change date default sysdate,
     status varchar(50),
-    creator default user,
-    constraint employee_id foreign key (employee_id) references emloyees (employee_id)
+    creator varchar(50) default user,
+    CONSTRAINT fk_column foreign key (employee_id) references employees (employee_id)
 )
 
 create table bonus_limits
 (
     id_b_limit number(10) primary key,
-    limit_percent number(7,5),
-    job_id number(10),
+    limit_percent number(10,5),
+    job_id varchar(10),
     constraint job_id foreign key (job_id) references jobs (job_id)
 )
 
 create or replace trigger b_tr
 before
-insert or update of sal_bon on bonus
+insert or update of sal_bon on bonuses
 for each row
 declare 
-sal number(100),
-lm number(50)
+sal number(100);
+lm number(50);
 BEGIN
+
 select salary,limit_percent
 into sal,lm
 from employees e
 join jobs j on e.employee_id =
-:new employee_id and e.job_id =j.job_id
-if :new sal_bon > sal * lm / 100 then 
-:new sal_bon := sal*lm/100;
+:new.employee_id and e.job_id =j.job_id
+join bonus_limits bl on j.job_id = bl.job_id;
+
+if :new.sal_bon > sal * lm / 100 then 
+:new.sal_bon := sal*lm/100;
 end if;
 end;
