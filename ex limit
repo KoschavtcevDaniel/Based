@@ -23,8 +23,8 @@ before
 insert or update of sal_bon on bonuses
 for each row
 declare 
-sal number(100);
-lm number(50);
+sal number(8, 2);
+lm number(10, 5);
 BEGIN
 
 select salary,limit_percent
